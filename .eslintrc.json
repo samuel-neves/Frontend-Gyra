@@ -25,6 +25,7 @@
   ],
   "rules": {
     "prettier/prettier": "error",
+    "no-alert": "off",
     "camelcase": "off",
     "no-useless-return": "off",
     "@typescript-eslint/ban-types": "off",

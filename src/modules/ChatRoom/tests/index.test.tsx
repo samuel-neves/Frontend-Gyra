@@ -4,6 +4,6 @@ import InitialForm from '../index';
 
 test('renders learn react link', () => {
   render(<InitialForm />);
-  const textElement = screen.getByText(/Room page/i);
-  expect(textElement).toBeInTheDocument();
+  const textElement = screen.getByText(/Teste/i);
+  expect(textElement).toBeUndefined();
 });
