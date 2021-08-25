@@ -2,8 +2,8 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import InitialForm from '../index';
 
-test('renders learn react link', () => {
+test('renders app title', () => {
   render(<InitialForm />);
-  const textElement = screen.getByText(/InitialForm page/i);
+  const textElement = screen.getByText(/Mensagens/i);
   expect(textElement).toBeInTheDocument();
 });
