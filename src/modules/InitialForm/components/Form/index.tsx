@@ -6,6 +6,7 @@ import * as Yup from 'yup';
 import { FiUser, FiMessageSquare } from 'react-icons/fi';
 import Input from '../Input';
 import getValidationErrors from '../../utils/getValidationErrors';
+import { setLocalStorage } from '../../utils/localStorage';
 
 import { Container, Button } from './styles';
 
@@ -33,7 +34,9 @@ const Form: React.FC = () => {
 
       const { name, room } = data;
 
-      history.push(`/chats/${room}`, { userName: name });
+      setLocalStorage(name);
+
+      history.push(`/chats/${room}`);
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
         const errors = getValidationErrors(err);
