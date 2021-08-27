@@ -26,9 +26,7 @@ interface ChatProps {
 }
 
 const InitialForm: React.FC<ChatProps> = ({ room, loggedUser = '' }) => {
-  const { data: newData, loading: newLoading } = useSubscription(
-    getMessagesSubscription,
-  );
+  const { data: newData } = useSubscription(getMessagesSubscription);
   const {
     error: queryError,
     loading,
@@ -54,6 +52,7 @@ const InitialForm: React.FC<ChatProps> = ({ room, loggedUser = '' }) => {
         setMessages([...messages, formattedData]);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newData]);
 
   useEffect(() => {
