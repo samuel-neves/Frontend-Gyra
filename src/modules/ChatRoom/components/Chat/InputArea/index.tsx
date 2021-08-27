@@ -1,10 +1,15 @@
 import { useMutation } from '@apollo/client';
 import React, { useEffect, useState } from 'react';
 
-import { createMessageMutation } from '../../../../services/Graphql/Messages/Mutations';
+import { createMessageMutation } from '../../../../../services/Graphql/Messages/Mutations';
 import { Container } from './styles';
 
-const InputArea: React.FC = () => {
+interface InputAreaProps {
+  loggedUser: string;
+  room: string;
+}
+
+const InputArea: React.FC<InputAreaProps> = ({ room, loggedUser }) => {
   const [messageValue, setMessageValue] = useState('');
   const [focused, setFocused] = React.useState(false);
 
@@ -13,7 +18,14 @@ const InputArea: React.FC = () => {
   );
 
   const handleSendMessage = () => {
-    console.log(messageValue);
+    createMessage({
+      variables: {
+        author: loggedUser,
+        room,
+        text: messageValue,
+      },
+    });
+    setMessageValue('');
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {

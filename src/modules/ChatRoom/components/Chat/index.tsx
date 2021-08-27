@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
 
 import { getMessagesByRoomQuery } from '../../../../services/Graphql/Messages/Queryes';
-import InputArea from '../InputArea';
+import InputArea from './InputArea';
 import {
   Container,
   MessageContainer,
@@ -79,7 +79,7 @@ const InitialForm: React.FC<ChatProps> = ({ room, loggedUser = '' }) => {
           </EmptyRoom>
         )}
       </MessageContainer>
-      <InputArea />
+      <InputArea room={room} loggedUser={loggedUser} />
     </Container>
   );
 };
