@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useQuery } from '@apollo/client';
+import { useQuery, useSubscription } from '@apollo/client';
 
 import { getMessagesByRoomQuery } from '../../../../services/Graphql/Messages/Queryes';
+import { getMessagesSubscription } from '../../../../services/Graphql/Messages/Subscriptions';
 import { Capitalize } from '../../../../utils/string';
 import InputArea from './InputArea';
 import {
@@ -25,10 +26,13 @@ interface ChatProps {
 }
 
 const InitialForm: React.FC<ChatProps> = ({ room, loggedUser = '' }) => {
+  const { data: newData, loading: newLoading } = useSubscription(
+    getMessagesSubscription,
+  );
   const {
     error: queryError,
     loading,
-    data,
+    data: queryData,
   } = useQuery(getMessagesByRoomQuery, {
     variables: {
       room,
@@ -38,8 +42,23 @@ const InitialForm: React.FC<ChatProps> = ({ room, loggedUser = '' }) => {
   const [messages, setMessages] = useState<Message[]>([]);
 
   useEffect(() => {
-    if (data !== undefined) {
-      const formattedData: Message[] = data.messagesByRoom.map(
+    if (newData !== undefined) {
+      if (newData.messageCreated.room === room) {
+        const formattedData: Message = {
+          _id: newData.messageCreated._id,
+          author: newData.messageCreated.author,
+          created_at: newData.messageCreated.created_at,
+          room: newData.messageCreated.room,
+          text: newData.messageCreated.text,
+        };
+        setMessages([...messages, formattedData]);
+      }
+    }
+  }, [newData]);
+
+  useEffect(() => {
+    if (queryData !== undefined) {
+      const formattedData: Message[] = queryData.messagesByRoom.map(
         (item: Message) => ({
           _id: item._id,
           author: item.author,
@@ -50,7 +69,7 @@ const InitialForm: React.FC<ChatProps> = ({ room, loggedUser = '' }) => {
       );
       setMessages([...formattedData]);
     }
-  }, [data]);
+  }, [queryData]);
 
   useEffect(() => {
     if (queryError) {
