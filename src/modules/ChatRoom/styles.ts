@@ -10,6 +10,9 @@ export const Container = styled.div`
 `;
 
 export const ExitButton = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: transparent;
   border: 2px solid #ff9000;
   border-radius: 8px;
@@ -17,4 +20,8 @@ export const ExitButton = styled.button`
   color: #ffffff;
   margin-bottom: 16px;
   width: 100%;
+
+  svg {
+    margin-left: 4px;
+  }
 `;

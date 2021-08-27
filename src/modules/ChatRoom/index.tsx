@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { FiLogIn } from 'react-icons/fi';
 
 import { useHistory, useParams } from 'react-router-dom';
 import DefaultTemplate from '../../template/Default';
@@ -40,6 +41,7 @@ const ChatRoom: React.FC = () => {
         outside={
           <ExitButton type="button" onClick={handleExitRoom}>
             Sair
+            <FiLogIn />
           </ExitButton>
         }
       >
