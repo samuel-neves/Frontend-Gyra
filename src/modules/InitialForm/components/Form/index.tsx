@@ -6,7 +6,7 @@ import * as Yup from 'yup';
 import { FiUser, FiMessageSquare } from 'react-icons/fi';
 import Input from '../Input';
 import getValidationErrors from '../../utils/getValidationErrors';
-import { setLocalStorage } from '../../utils/localStorage';
+import { setLocalStorage } from '../../../../utils/localStorage';
 
 import { Container, Button } from './styles';
 

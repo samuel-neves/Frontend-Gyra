@@ -1,26 +1,55 @@
-import { useQuery } from '@apollo/client';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { useParams } from 'react-router-dom';
-import { getAllMessages } from '../../services/Graphql/Messages/Queryes';
+import { useHistory, useParams } from 'react-router-dom';
+import DefaultTemplate from '../../template/Default';
+import Chat from './components/Chat';
+import {
+  getLocalStorageBoolean,
+  removeLocalStorage,
+} from '../../utils/localStorage';
+import { Container, ExitButton } from './styles';
 
 interface ParamsData {
   roomName: string;
 }
 
-const InitialForm: React.FC = () => {
+const ChatRoom: React.FC = () => {
+  const { push } = useHistory();
   const { roomName } = useParams<ParamsData>();
-  const { error, loading, data } = useQuery(getAllMessages);
+  const [loggedUser, setLoggedUser] = useState('');
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-    console.log(data);
-  }, [data]);
+    const userName = getLocalStorageBoolean();
+    if (!userName) {
+      push('/');
+      alert('Nome obrigatório para conversa. Informe seu nome novamente');
+    } else {
+      setLoggedUser(userName);
+    }
+  });
+
+  const handleExitRoom = () => {
+    removeLocalStorage();
+    push('/');
+  };
 
   return (
-    <div className="App">
-      <p>Room {roomName}</p>
-    </div>
+    <>
+      <DefaultTemplate
+        outside={
+          <ExitButton type="button" onClick={handleExitRoom}>
+            Sair
+          </ExitButton>
+        }
+      >
+        <Container>
+          <h1>{roomName}</h1>
+          <Chat room={roomName} loggedUser={loggedUser} />
+        </Container>
+      </DefaultTemplate>
+    </>
   );
 };
 
-export default InitialForm;
+export default ChatRoom;

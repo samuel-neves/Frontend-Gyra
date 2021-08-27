@@ -1,11 +1,18 @@
 import React from 'react';
 
-import { Container, ChildrenContainer } from './styles';
+import { Container, ContentContainer, ChildrenContainer } from './styles';
 
-const DefaultTemplate: React.FC = ({ children }) => {
+interface TemplateProps {
+  outside?: React.ReactNode;
+}
+
+const DefaultTemplate: React.FC<TemplateProps> = ({ children, outside }) => {
   return (
     <Container>
-      <ChildrenContainer>{children}</ChildrenContainer>
+      <ContentContainer>
+        <div>{outside}</div>
+        <ChildrenContainer>{children}</ChildrenContainer>
+      </ContentContainer>
     </Container>
   );
 };

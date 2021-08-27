@@ -25,5 +25,24 @@ export default createGlobalStyle`
     button {
       cursor: pointer;
     }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+      left: -4px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #ff900066;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #ff9000;
+    }
   }
 `;
