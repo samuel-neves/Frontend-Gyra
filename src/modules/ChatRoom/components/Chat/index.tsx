@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
 
 import { getMessagesByRoomQuery } from '../../../../services/Graphql/Messages/Queryes';
+import { Capitalize } from '../../../../utils/string';
 import InputArea from './InputArea';
 import {
   Container,
@@ -68,11 +69,11 @@ const InitialForm: React.FC<ChatProps> = ({ room, loggedUser = '' }) => {
                 message.author.toLowerCase() === loggedUser.toLowerCase()
               }
             >
-              <h3>{message.author}</h3>
+              <h3>{Capitalize(message.author)}</h3>
               <p>{message.text}</p>
             </MessageContentContainer>
           ))}
-        {messages.length === 0 && (
+        {!loading && messages.length === 0 && (
           <EmptyRoom>
             <h2>Parece que essa sala não possui mensagens.</h2>
             <p>Seja o primeiro a enviar algo</p>

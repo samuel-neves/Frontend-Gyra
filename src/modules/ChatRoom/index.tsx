@@ -8,6 +8,7 @@ import {
   getLocalStorageBoolean,
   removeLocalStorage,
 } from '../../utils/localStorage';
+import { Capitalize } from '../../utils/string';
 import { Container, ExitButton } from './styles';
 
 interface ParamsData {
@@ -46,7 +47,7 @@ const ChatRoom: React.FC = () => {
         }
       >
         <Container>
-          <h1>{roomName}</h1>
+          <h1>{Capitalize(roomName)}</h1>
           <Chat room={roomName} loggedUser={loggedUser} />
         </Container>
       </DefaultTemplate>

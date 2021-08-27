@@ -7,6 +7,7 @@ import { FiUser, FiMessageSquare } from 'react-icons/fi';
 import Input from '../Input';
 import getValidationErrors from '../../utils/getValidationErrors';
 import { setLocalStorage } from '../../../../utils/localStorage';
+import { Trim } from '../../../../utils/string';
 
 import { Container, Button } from './styles';
 
@@ -34,9 +35,9 @@ const Form: React.FC = () => {
 
       const { name, room } = data;
 
-      setLocalStorage(name);
+      setLocalStorage(Trim(name.toLowerCase()));
 
-      history.push(`/chats/${room}`);
+      history.push(`/chats/${Trim(room.toLowerCase())}`);
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
         const errors = getValidationErrors(err);
