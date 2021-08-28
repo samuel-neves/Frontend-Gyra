@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FiLogIn } from 'react-icons/fi';
 
 import { useHistory, useParams } from 'react-router-dom';
+import { useMutation } from '@apollo/client';
 import DefaultTemplate from '../../template/Default';
 import Chat from './components/Chat';
 import {
@@ -10,6 +11,7 @@ import {
 } from '../../utils/localStorage';
 import { Capitalize } from '../../utils/string';
 import { Container, ExitButton } from './styles';
+import { userExitedMutation } from '../../services/Graphql/Room/Mutations';
 
 interface ParamsData {
   roomName: string;
@@ -19,6 +21,7 @@ const ChatRoom: React.FC = () => {
   const { push } = useHistory();
   const { roomName } = useParams<ParamsData>();
   const [loggedUser, setLoggedUser] = useState('');
+  const [userExited] = useMutation(userExitedMutation);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
@@ -32,7 +35,15 @@ const ChatRoom: React.FC = () => {
   });
 
   const handleExitRoom = () => {
+    userExited({
+      variables: {
+        author: loggedUser.toLowerCase(),
+        name: roomName.toLowerCase(),
+      },
+    });
+
     removeLocalStorage();
+
     push('/');
   };
 

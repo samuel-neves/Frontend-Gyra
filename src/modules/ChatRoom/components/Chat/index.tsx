@@ -3,6 +3,10 @@ import { useQuery, useSubscription } from '@apollo/client';
 
 import { getMessagesByRoomQuery } from '../../../../services/Graphql/Messages/Queryes';
 import { getMessagesSubscription } from '../../../../services/Graphql/Messages/Subscriptions';
+import {
+  getUserEnteredSubscription,
+  getUserExitedSubscription,
+} from '../../../../services/Graphql/Room/Subscriptions';
 import { Capitalize } from '../../../../utils/string';
 import InputArea from './InputArea';
 import {
@@ -26,12 +30,10 @@ interface ChatProps {
 }
 
 const InitialForm: React.FC<ChatProps> = ({ room, loggedUser = '' }) => {
-  const { data: newData } = useSubscription(getMessagesSubscription);
-  const {
-    error: queryError,
-    loading,
-    data: queryData,
-  } = useQuery(getMessagesByRoomQuery, {
+  const { data: newMessage } = useSubscription(getMessagesSubscription);
+  const { data: userEntered } = useSubscription(getUserEnteredSubscription);
+  const { data: userExited } = useSubscription(getUserExitedSubscription);
+  const { loading, data: queryData } = useQuery(getMessagesByRoomQuery, {
     variables: {
       room,
     },
@@ -40,20 +42,21 @@ const InitialForm: React.FC<ChatProps> = ({ room, loggedUser = '' }) => {
   const [messages, setMessages] = useState<Message[]>([]);
 
   useEffect(() => {
-    if (newData !== undefined) {
-      if (newData.messageCreated.room === room) {
+    if (newMessage !== undefined) {
+      if (newMessage.messageCreated.room === room) {
         const formattedData: Message = {
-          _id: newData.messageCreated._id,
-          author: newData.messageCreated.author,
-          created_at: newData.messageCreated.created_at,
-          room: newData.messageCreated.room,
-          text: newData.messageCreated.text,
+          _id: newMessage.messageCreated._id,
+          author: newMessage.messageCreated.author,
+          created_at: newMessage.messageCreated.created_at,
+          room: newMessage.messageCreated.room,
+          text: newMessage.messageCreated.text,
         };
         setMessages([...messages, formattedData]);
       }
     }
+    return;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [newData]);
+  }, [newMessage]);
 
   useEffect(() => {
     if (queryData !== undefined) {
@@ -71,10 +74,32 @@ const InitialForm: React.FC<ChatProps> = ({ room, loggedUser = '' }) => {
   }, [queryData]);
 
   useEffect(() => {
-    if (queryError) {
-      console.log(queryError);
+    if (userEntered !== undefined) {
+      if (
+        userEntered.userEnteredSubscription.name === room &&
+        userEntered.userEnteredSubscription.author !== loggedUser
+      ) {
+        alert(
+          `Usuário ${userEntered.userEnteredSubscription.author} entrou na conversa`,
+        );
+      }
     }
-  }, [queryError]);
+    return;
+  }, [userEntered, loggedUser, room]);
+
+  useEffect(() => {
+    if (userExited !== undefined) {
+      if (
+        userExited.userExitedSubscription.name === room &&
+        userExited.userExitedSubscription.author !== loggedUser
+      ) {
+        alert(
+          `Usuário ${userExited.userExitedSubscription.author} saiu da conversa`,
+        );
+      }
+    }
+    return;
+  }, [userExited, loggedUser, room]);
 
   return (
     <Container>

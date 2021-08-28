@@ -2,11 +2,13 @@ import React, { useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
-
 import { FiUser, FiMessageSquare } from 'react-icons/fi';
+import { useMutation } from '@apollo/client';
+
 import Input from '../Input';
 import getValidationErrors from '../../utils/getValidationErrors';
 import { setLocalStorage } from '../../../../utils/localStorage';
+import { userEnteredMutation } from '../../../../services/Graphql/Room/Mutations';
 import { Trim } from '../../../../utils/string';
 
 import { Container, Button } from './styles';
@@ -19,6 +21,7 @@ interface FormData {
 const Form: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const history = useHistory();
+  const [userEntered] = useMutation(userEnteredMutation);
 
   const handleSubmitForm = async (data: FormData) => {
     try {
@@ -36,6 +39,13 @@ const Form: React.FC = () => {
       const { name, room } = data;
 
       setLocalStorage(Trim(name.toLowerCase()));
+
+      userEntered({
+        variables: {
+          author: name.toLowerCase(),
+          name: room.toLowerCase(),
+        },
+      });
 
       history.push(`/chats/${Trim(room.toLowerCase())}`);
     } catch (err) {
